@@ -158,8 +158,11 @@ function getDirection(){
     var x = baseX-circX;
     var y = baseY-circY;
 
-    var ydir = (y/Math.sqrt((x*x)+(y*y)));
-    var xdir = -1*(x/Math.sqrt((x*x)+(y*y)));
+    var sin = (y/Math.sqrt((x*x)+(y*y)));
+    var cos = -1*(x/Math.sqrt((x*x)+(y*y)));
+
+    var xdir = (Math.abs(x)/50)*cos;
+    var ydir = (Math.abs(y)/50)*sin;
 
     var analogDir = {'xdir': xdir, 'ydir': ydir};
     return analogDir;
