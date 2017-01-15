@@ -6,7 +6,8 @@ var mouseDown = false;
 var circX, circY; //where the circle will be drawn for the analog stick
 var baseX, baseY; //where the base of the analog stick will be drawn
 var touchable = 'createTouch' in document;
-var touches =[];
+var touch;
+var halfX = (window.innerWidth/2);
 
 setupCanvas();
 
@@ -53,38 +54,32 @@ function init(){
 
 function draw(){
     c.clearRect(0, 0, canvas.width, canvas.height);
-    if(touchable){
-        for(var i=0; i<touches.length; i++){
-            var touch = touches[i];
+    if(touchable && touch.clientX<halfX){
 			c.beginPath();
 			c.fillStyle = "white";
 			c.fillText("touch id : "+touch.identifier+" x:"+touch.clientX+" y:"+touch.clientY, touch.clientX+30, touch.clientY-30);
 
             c.beginPath();
-            c.strokeStyle = "red";
+            c.strokeStyle = "rgba(255, 0, 0, 0.3)";
             c.lineWidth = "6";
             c.arc(baseX, baseY, 40, 0, Math.PI*2, true);
             c.stroke();
 
 			c.beginPath();
-			c.strokeStyle = "cyan";
+			c.strokeStyle = "rgba(0, 255, 0, 0.3)";
 			c.lineWidth = "6";
 			c.arc(touch.clientX, touch.clientY, 40, 0, Math.PI*2, true);
 			c.stroke();
-        }//for
     } else{
-        if(mouseDown){
+        if(mouseDown && baseX<halfX){
             c.beginPath();
-            c.fillStyle = "white";
-
-            c.beginPath();
-            c.strokeStyle = "red";
+            c.strokeStyle = "rgba(255, 0, 0, 0.3)";
             c.lineWidth = "6";
             c.arc(baseX, baseY, 40, 0, Math.PI*2, true);
             c.stroke();
 
             c.beginPath();
-            c.strokeStyle = "cyan";
+            c.strokeStyle = "rgba(0, 255, 0, 0.3)";
             c.lineWidth = "6";
             c.arc(circX, circY, 40, 0, Math.PI*2, true);
             c.stroke();
@@ -93,7 +88,9 @@ function draw(){
 }//draw
 
 function onTouchStart(e) {
-	touches = e.touches;
+	touch = e.touches[0];
+    baseX = touch.clientX;
+    baseY = touch.clientY;
 }//onTouchStart
 
 function onTouchMove(e) {
@@ -108,9 +105,15 @@ function onTouchEnd(e) {
 function onMouseMove(event) {
 	mouseX = event.offsetX;
 	mouseY = event.offsetY;
+    var lowHigh = ((baseY-mouseY)>50 || (baseY-mouseY)<-50);
+    var leftRight = (((baseX-mouseX)>50) || (baseX-mouseX)<-50);
     if(mouseDown){
-        circX = mouseX;
-        circY = mouseY;
+        if(!lowHigh){
+            circY = mouseY;
+        }////if
+        if(!leftRight){
+            circX = mouseX;
+        }//if
     }
 }//onMouseMove
 
