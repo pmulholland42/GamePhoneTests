@@ -59,26 +59,26 @@ function draw(){
     c.clearRect(0, 0, canvas.width, canvas.height);
     if(touching && touch.clientX<halfX){
             c.beginPath();
-            c.strokeStyle = "rgba(255, 0, 0, 0.3)";//red base
+            c.strokeStyle = "rgba(255, 0, 0, 0.5)";//red base
             c.lineWidth = "10";
             c.arc(baseX, baseY, 50, 0, Math.PI*2, true);
             c.stroke();
 
 			c.beginPath();
-			c.strokeStyle = "rgba(0, 255, 0, 0.3)";//green stick
+			c.strokeStyle = "rgba(0, 255, 0, 0.5)";//green stick
 			c.lineWidth = "10";
 			c.arc(circX, circY, 50, 0, Math.PI*2, true);
 			c.stroke();
     } else{
         if(mouseDown && baseX<halfX){
             c.beginPath();
-            c.strokeStyle = "rgba(255, 0, 0, 0.3)";
+            c.strokeStyle = "rgba(255, 0, 0, 0.5)";
             c.lineWidth = "10";
             c.arc(baseX, baseY, 50, 0, Math.PI*2, true);
             c.stroke();
 
             c.beginPath();
-            c.strokeStyle = "rgba(0, 255, 0, 0.3)";
+            c.strokeStyle = "rgba(0, 255, 0, 0.5)";
             c.lineWidth = "10";
             c.arc(circX, circY, 50, 0, Math.PI*2, true);
             c.stroke();
