@@ -7,6 +7,7 @@ var circX, circY; //where the circle will be drawn for the analog stick
 var baseX, baseY; //where the base of the analog stick will be drawn
 var touchable = 'createTouch' in document;
 var touch;
+var touching = false;
 var halfX = (window.innerWidth/2);
 
 setupCanvas();
@@ -38,6 +39,7 @@ if(touchable) {
 	canvas.addEventListener( 'mousemove', onMouseMove, false );
     canvas.addEventListener('mousedown', onMouseDown, false);
     canvas.addEventListener('mouseup', onMouseUp, false);
+    window.onresize = resetCanvas;
 }
 
 function resetCanvas (e) {
@@ -54,34 +56,30 @@ function init(){
 
 function draw(){
     c.clearRect(0, 0, canvas.width, canvas.height);
-    if(touchable && touch.clientX<halfX){
-			c.beginPath();
-			c.fillStyle = "white";
-			c.fillText("touch id : "+touch.identifier+" x:"+touch.clientX+" y:"+touch.clientY, touch.clientX+30, touch.clientY-30);
-
+    if(touching && touch.clientX<halfX){
             c.beginPath();
-            c.strokeStyle = "rgba(255, 0, 0, 0.3)";
-            c.lineWidth = "6";
-            c.arc(baseX, baseY, 40, 0, Math.PI*2, true);
+            c.strokeStyle = "rgba(255, 0, 0, 0.3)";//red base
+            c.lineWidth = "10";
+            c.arc(baseX, baseY, 50, 0, Math.PI*2, true);
             c.stroke();
 
 			c.beginPath();
-			c.strokeStyle = "rgba(0, 255, 0, 0.3)";
-			c.lineWidth = "6";
-			c.arc(touch.clientX, touch.clientY, 40, 0, Math.PI*2, true);
+			c.strokeStyle = "rgba(0, 255, 0, 0.3)";//green stick
+			c.lineWidth = "10";
+			c.arc(circX, circY, 50, 0, Math.PI*2, true);
 			c.stroke();
     } else{
         if(mouseDown && baseX<halfX){
             c.beginPath();
             c.strokeStyle = "rgba(255, 0, 0, 0.3)";
-            c.lineWidth = "6";
-            c.arc(baseX, baseY, 40, 0, Math.PI*2, true);
+            c.lineWidth = "10";
+            c.arc(baseX, baseY, 50, 0, Math.PI*2, true);
             c.stroke();
 
             c.beginPath();
             c.strokeStyle = "rgba(0, 255, 0, 0.3)";
-            c.lineWidth = "6";
-            c.arc(circX, circY, 40, 0, Math.PI*2, true);
+            c.lineWidth = "10";
+            c.arc(circX, circY, 50, 0, Math.PI*2, true);
             c.stroke();
         }
     }
@@ -91,15 +89,28 @@ function onTouchStart(e) {
 	touch = e.touches[0];
     baseX = touch.clientX;
     baseY = touch.clientY;
+    touching = true;
 }//onTouchStart
 
 function onTouchMove(e) {
 	e.preventDefault();
-	touches = e.touches;//e.touches is the number of fingers that are touching the screen
+    touch = e.touches[0];
+    touchX = touch.clientX;
+    touchY = touch.clientY;
+    var lowHigh = ((baseY-touchY)>50 || (baseY-touchY)<-50);
+    var leftRight = (((baseX-touchX)>50) || (baseX-touchX)<-50);
+    if(touching){
+        if(!lowHigh){
+            circY = touchY;
+        }//if
+        if(!leftRight){
+            circX = touchX;
+        }//if
+    }
 }//onTouchMove
 
 function onTouchEnd(e) {
-   	touches = e.touches;
+   	touching = false;
 }//onTouchEnd
 
 function onMouseMove(event) {
