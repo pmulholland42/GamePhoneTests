@@ -35,12 +35,13 @@ if(touchable) {
 	canvas.addEventListener( 'touchend', onTouchEnd, false );
 	window.onorientationchange = resetCanvas;
 	window.onresize = resetCanvas;
+
 } else {
 	canvas.addEventListener( 'mousemove', onMouseMove, false );
     canvas.addEventListener('mousedown', onMouseDown, false);
     canvas.addEventListener('mouseup', onMouseUp, false);
     window.onresize = resetCanvas;
-}
+}// if...else
 
 function resetCanvas (e) {
  	// resize the canvas - but remember - this clears the canvas too.
