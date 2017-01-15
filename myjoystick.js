@@ -151,6 +151,9 @@ function onMouseDown(e){
     mouseDown = true;
 }//onMouseDown
 
+
+// Returns an object with xdir and ydir that has the direction between
+// -1 and 1 in each position
 function getDirection(){
     var x = baseX-circX;
     var y = baseY-circY;
