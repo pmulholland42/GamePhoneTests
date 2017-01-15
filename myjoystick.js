@@ -71,6 +71,10 @@ function draw(){
 			c.stroke();
     } else{
         if(mouseDown && baseX<halfX){
+            var direction = getDirection();
+            var x = direction.xdir;
+            var y = direction.ydir;
+
             c.beginPath();
             c.strokeStyle = "rgba(255, 0, 0, 0.5)";
             c.lineWidth = "10";
@@ -82,8 +86,14 @@ function draw(){
             c.lineWidth = "10";
             c.arc(circX, circY, 50, 0, Math.PI*2, true);
             c.stroke();
-        }
-    }
+
+            c.font = '30px';
+            c.fillText('xdir: '+x, 10, 60);
+
+            c.font = '30px';
+            c.fillText('ydir: '+y, 10, 80);
+        }//if
+    }//if else
 }//draw
 
 function onTouchStart(e) {
@@ -129,7 +139,7 @@ function onMouseMove(event) {
     }
 }//onMouseMove
 
-function onMouseUp(){
+function onMouseUp(e){
     mouseDown = false;
 }//onMouseUp
 
@@ -140,3 +150,14 @@ function onMouseDown(e){
     baseY = mouseY;
     mouseDown = true;
 }//onMouseDown
+
+function getDirection(){
+    var x = baseX-circX;
+    var y = baseY-circY;
+
+    var ydir = (y/Math.sqrt((x*x)+(y*y)));
+    var xdir = -1*(x/Math.sqrt((x*x)+(y*y)));
+
+    var analogDir = {'xdir': xdir, 'ydir': ydir};
+    return analogDir;
+}//getDirection
