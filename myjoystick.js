@@ -71,9 +71,13 @@ function draw(){
 			c.stroke();
     } else{
         if(mouseDown && baseX<halfX){
-            var direction = getDirection();
-            var x = direction.xdir;
-            var y = direction.ydir;
+            var anlDirection = getDirection();
+            var anlx = anlDirection.xdir;
+            var anly = anlDirection.ydir;
+
+            var digDirection = getDigDirection();
+            var digx = digDirection.xdig;
+            var digy = digDirection.ydig;
 
             c.beginPath();
             c.strokeStyle = "rgba(255, 0, 0, 0.5)";
@@ -88,10 +92,16 @@ function draw(){
             c.stroke();
 
             c.font = '30px';
-            c.fillText('xdir: '+x, 10, 60);
+            c.fillText('digx: '+digx, 10, 20);
 
             c.font = '30px';
-            c.fillText('ydir: '+y, 10, 80);
+            c.fillText('digy: '+digy, 10, 40);
+
+            c.font = '30px';
+            c.fillText('anlx: '+anlx, 10, 60);
+
+            c.font = '30px';
+            c.fillText('anly: '+anly, 10, 80);
         }//if
     }//if else
 }//draw
@@ -151,7 +161,6 @@ function onMouseDown(e){
     mouseDown = true;
 }//onMouseDown
 
-
 // Returns an object with xdir and ydir that has the direction between
 // -1 and 1 in each position
 function getDirection(){
@@ -167,3 +176,39 @@ function getDirection(){
     var analogDir = {'xdir': xdir, 'ydir': ydir};
     return analogDir;
 }//getDirection
+
+// Returns an object with xdir and ydir that has either -1, 1, or 0 for
+// each value
+function getDigDirection(){
+    var x = baseX-circX;
+    var y = baseY-circY;
+
+    var sin = (y/Math.sqrt((x*x)+(y*y)));
+    var cos = -1*(x/Math.sqrt((x*x)+(y*y)));
+
+    var xdir = (Math.abs(x)/50)*cos;
+    var ydir = (Math.abs(y)/50)*sin;
+
+    var xdig = 0;
+    var ydig = 0;
+
+    if(xdir<0.5 && xdir>(-0.5)){
+        xdig = 0;
+    } else if(xdir<=0.5){
+        xdig = -1;
+    } else {
+        xdig = 1;
+    }//xdig if else
+
+    if(ydir>=0.5){
+        ydig = 1;
+    } else if(ydir<=(-0.5)){
+        ydig = -1;
+    } else {
+        ydig = 0;
+    }//if else for ydig
+
+    var digital = {'xdig': xdig, 'ydig': ydig};
+
+    return digital;
+}//getDigDirection

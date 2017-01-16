@@ -1,10 +1,10 @@
 canvas{
-    background-color:#777777;
+    background-color:#999999;
     display:block;
     position:absolute;
 }
 body{
-    background-color: #777777;
+    background-color: #999999;
 }
 .container{
     width:auto;
