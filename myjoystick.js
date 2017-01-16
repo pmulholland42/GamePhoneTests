@@ -58,6 +58,14 @@ function init(){
 function draw(){
     c.clearRect(0, 0, canvas.width, canvas.height);
     if(touching && touch.clientX<halfX){
+        var digDirection = getDigDirection();
+        var digx = digDirection.xdig;
+        var digy = digDirection.ydig;
+
+        var anlDirection = getDirection();
+        var anlx = anlDirection.xdir;
+        var anly = anlDirection.ydir;
+
             c.beginPath();
             c.strokeStyle = "rgba(255, 0, 0, 0.5)";//red base
             c.lineWidth = "10";
@@ -69,6 +77,18 @@ function draw(){
 			c.lineWidth = "10";
 			c.arc(circX, circY, 50, 0, Math.PI*2, true);
 			c.stroke();
+
+            c.font = '50px';
+            c.fillText('digx: '+digx, 10, 20);
+
+            c.font = '50px';
+            c.fillText('digy: '+digy, 10, 40);
+
+            c.font = '30px';
+            c.fillText('anlx: '+anlx, 10, 60);
+
+            c.font = '30px';
+            c.fillText('anly: '+anly, 10, 80);
     } else{
         if(mouseDown && baseX<halfX){
             var anlDirection = getDirection();
@@ -200,9 +220,9 @@ function getDigDirection(){
         xdig = 1;
     }//xdig if else
 
-    if(ydir>=0.5){
+    if(ydir>=0.25){
         ydig = 1;
-    } else if(ydir<=(-0.5)){
+    } else if(ydir<=(-0.25)){
         ydig = -1;
     } else {
         ydig = 0;
