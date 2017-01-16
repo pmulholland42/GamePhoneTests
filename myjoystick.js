@@ -69,13 +69,13 @@ function draw(){
             c.beginPath();
             c.strokeStyle = "rgba(255, 0, 0, 0.5)";//red base
             c.lineWidth = "10";
-            c.arc(baseX, baseY, 50, 0, Math.PI*2, true);
+            c.arc(baseX, baseY, 65, 0, Math.PI*2, true);
             c.stroke();
 
 			c.beginPath();
 			c.strokeStyle = "rgba(0, 255, 0, 0.5)";//green stick
 			c.lineWidth = "10";
-			c.arc(circX, circY, 50, 0, Math.PI*2, true);
+			c.arc(circX, circY, 65, 0, Math.PI*2, true);
 			c.stroke();
 
             c.font = '50px';
