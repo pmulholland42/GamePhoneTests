@@ -9,6 +9,7 @@ var touchable = 'createTouch' in document;
 var touch;
 var touching = false;
 var halfX = (window.innerWidth/2);
+var rad = 80;
 
 setupCanvas();
 
@@ -140,15 +141,15 @@ function onTouchMove(e) {
     touchY = touch.clientY;
 	var dist = Math.sqrt(Math.pow(baseY-touchY, 2) + Math.pow(baseX-touchX, 2));
 	if (touching) {
-		if (dist < 60 || dist < -60) { // in the circle
+		if (dist < rad || dist < -rad) { // in the circle
 			circY=touchY;
 			circX=touchX;
 		} else { // outside the circle
 			// SOHCAHTOA TIME BITCHES
 			var angle = Math.atan((touchY-baseY)/(touchX-baseX));
-			var opposite = 60 * Math.sin(angle);
-			var adjacent = 60 * Math.cos(angle);
-			
+			var opposite = rad * Math.sin(angle);
+			var adjacent = rad * Math.cos(angle);
+
 			if (touchX > baseX) {
 				circX=baseX+adjacent;
 				circY=baseY+opposite;
@@ -167,18 +168,18 @@ function onTouchEnd(e) {
 function onMouseMove(event) {
 	mouseX = event.offsetX;
 	mouseY = event.offsetY;
-	
+
 	var dist = Math.sqrt(Math.pow(baseY-mouseY, 2) + Math.pow(baseX-mouseX, 2));
 	if (mouseDown) {
-		if (dist < 60 || dist < -60) { // in the circle
+		if (dist < rad || dist < -rad) { // in the circle
 			circY=mouseY;
 			circX=mouseX;
 		} else { // outside the circle
 			// SOHCAHTOA TIME BITCHES
 			var angle = Math.atan((mouseY-baseY)/(mouseX-baseX));
-			var opposite = 60 * Math.sin(angle);
-			var adjacent = 60 * Math.cos(angle);
-			
+			var opposite = rad * Math.sin(angle);
+			var adjacent = rad * Math.cos(angle);
+
 			if (mouseX > baseX) {
 				circX=baseX+adjacent;
 				circY=baseY+opposite;
@@ -211,8 +212,8 @@ function getDirection(){
     var sin = (y/Math.sqrt((x*x)+(y*y)));
     var cos = -1*(x/Math.sqrt((x*x)+(y*y)));
 
-    var xdir = (Math.abs(x)/50)*cos;
-    var ydir = (Math.abs(y)/50)*sin;
+    var xdir = (Math.abs(x)/rad)*cos;
+    var ydir = (Math.abs(y)/rad)*sin;
 
     var analogDir = {'xdir': xdir, 'ydir': ydir};
     return analogDir;
@@ -227,8 +228,8 @@ function getDigDirection(){
     var sin = (y/Math.sqrt((x*x)+(y*y)));
     var cos = -1*(x/Math.sqrt((x*x)+(y*y)));
 
-    var xdir = (Math.abs(x)/50)*cos;
-    var ydir = (Math.abs(y)/50)*sin;
+    var xdir = (Math.abs(x)/rad)*cos;
+    var ydir = (Math.abs(y)/rad)*sin;
 
     var xdig = 0;
     var ydig = 0;
@@ -241,9 +242,9 @@ function getDigDirection(){
         xdig = 1;
     }//xdig if else
 
-    if(ydir>=0.25){
+    if(ydir>=0.2){
         ydig = 1;
-    } else if(ydir<=(-0.25)){
+    } else if(ydir<=(-0.2)){
         ydig = -1;
     } else {
         ydig = 0;
