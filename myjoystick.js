@@ -180,7 +180,7 @@ function onMouseMove(event) {
 			var opposite = rad * Math.sin(angle);
 			var adjacent = rad * Math.cos(angle);
 
-			if (mouseX > baseX) {
+			if (mouseX >= baseX) {
 				circX=baseX+adjacent;
 				circY=baseY+opposite;
 			} else {
