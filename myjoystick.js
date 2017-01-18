@@ -149,8 +149,13 @@ function onTouchMove(e) {
 			var opposite = 60 * Math.sin(angle);
 			var adjacent = 60 * Math.cos(angle);
 			
-			circY=baseY+opposite;
-			circX=baseX+adjacent;
+			if (touchX > baseX) {
+				circX=baseX+adjacent;
+				circY=baseY+opposite;
+			} else {
+				circX=baseX-adjacent;
+				circY=baseY-opposite;
+			}
 		}
 	}
 }//onTouchMove
@@ -164,7 +169,7 @@ function onMouseMove(event) {
 	mouseY = event.offsetY;
 	
 	var dist = Math.sqrt(Math.pow(baseY-mouseY, 2) + Math.pow(baseX-mouseX, 2));
-	if (touching) {
+	if (mouseDown) {
 		if (dist < 60 || dist < -60) { // in the circle
 			circY=mouseY;
 			circX=mouseX;
@@ -173,9 +178,14 @@ function onMouseMove(event) {
 			var angle = Math.atan((mouseY-baseY)/(mouseX-baseX));
 			var opposite = 60 * Math.sin(angle);
 			var adjacent = 60 * Math.cos(angle);
-
-			circY=baseY+opposite;
-			circX=baseX+adjacent;
+			
+			if (mouseX > baseX) {
+				circX=baseX+adjacent;
+				circY=baseY+opposite;
+			} else {
+				circX=baseX-adjacent;
+				circY=baseY-opposite;
+			}
 		}
 	}
 }//onMouseMove
