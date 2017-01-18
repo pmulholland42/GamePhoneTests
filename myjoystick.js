@@ -138,16 +138,26 @@ function onTouchMove(e) {
     touch = e.touches[0];
     touchX = touch.clientX;
     touchY = touch.clientY;
-    var lowHigh = ((baseY-touchY)>50 || (baseY-touchY)<-50);
-    var leftRight = (((baseX-touchX)>50) || (baseX-touchX)<-50);
-    if(touching){
-        if(!lowHigh){
-            circY = touchY;
-        }//if
-        if(!leftRight){
-            circX = touchX;
-        }//if
-    }
+	var dist = Math.sqrt(Math.pow(baseY-touchY, 2) + Math.pow(baseX-touchX, 2));
+	if (touching) {
+		if (dist < 60 || dist < -60) { // in the circle
+			circY=touchY;
+			circX=touchX;
+		} else { // outside the circle
+			// SOHCAHTOA TIME BITCHES
+			var angle = Math.atan((touchY-baseY)/(touchX-baseX));
+			var opposite = 60 * Math.sin(angle);
+			var adjacent = 60 * Math.cos(angle);
+			
+			if (touchX > baseX) {
+				circX=baseX+adjacent;
+				circY=baseY+opposite;
+			} else {
+				circX=baseX-adjacent;
+				circY=baseY-opposite;
+			}
+		}
+	}
 }//onTouchMove
 
 function onTouchEnd(e) {
@@ -157,16 +167,27 @@ function onTouchEnd(e) {
 function onMouseMove(event) {
 	mouseX = event.offsetX;
 	mouseY = event.offsetY;
-    var lowHigh = ((baseY-mouseY)>50 || (baseY-mouseY)<-50);
-    var leftRight = (((baseX-mouseX)>50) || (baseX-mouseX)<-50);
-    if(mouseDown){
-        if(!lowHigh){
-            circY = mouseY;
-        }////if
-        if(!leftRight){
-            circX = mouseX;
-        }//if
-    }
+	
+	var dist = Math.sqrt(Math.pow(baseY-mouseY, 2) + Math.pow(baseX-mouseX, 2));
+	if (mouseDown) {
+		if (dist < 60 || dist < -60) { // in the circle
+			circY=mouseY;
+			circX=mouseX;
+		} else { // outside the circle
+			// SOHCAHTOA TIME BITCHES
+			var angle = Math.atan((mouseY-baseY)/(mouseX-baseX));
+			var opposite = 60 * Math.sin(angle);
+			var adjacent = 60 * Math.cos(angle);
+			
+			if (mouseX > baseX) {
+				circX=baseX+adjacent;
+				circY=baseY+opposite;
+			} else {
+				circX=baseX-adjacent;
+				circY=baseY-opposite;
+			}
+		}
+	}
 }//onMouseMove
 
 function onMouseUp(e){
