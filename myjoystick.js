@@ -1,6 +1,6 @@
-var canvas;
-var c;
-var container;
+var canvas; 	// <canvas> 
+var c;			// Canvas rendering context
+var container;	// <div>
 var mouseX, mouseY;
 var mouseDown = false;
 var circX, circY; //where the circle will be drawn for the analog stick
@@ -15,19 +15,25 @@ setupCanvas();
 
 setInterval(draw, 1000/35);
 
-function setupCanvas(){
+function setupCanvas() {
+	// Create a <canvas> HTML tag
     canvas = document.createElement( 'canvas' );
-	c = canvas.getContext( '2d' );
-	container = document.createElement( 'div' );
-	container.className = "container";
-
-	canvas.width = window.innerWidth;
+	canvas.width = window.innerWidth;				
 	canvas.height = window.innerHeight;
-	document.body.appendChild( container );
-	container.appendChild(canvas);
-
+	
+	// Get a CanvasRenderingContext2D on the canvas
+	c = canvas.getContext( '2d' );
 	c.strokeStyle = "#ffffff";
 	c.lineWidth = 2;
+	
+	// Create a <div> HTML tag called container
+	container = document.createElement( 'div' );
+	container.className = "container";
+	
+	// Put the canvas in the container
+	container.appendChild(canvas);
+	// Put the container on the page
+	document.body.appendChild( container );
 }//setupCanvas
 
 if(touchable) {
