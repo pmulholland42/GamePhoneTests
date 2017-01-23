@@ -88,7 +88,7 @@ function draw() {
         c.fillText('anly: '+anly, 10, 80);
 
 		// Set the circle radius
-		// TODO: make this always 65 when it's only used on mobile
+		// TODO: make this always be 65 when it's only used on mobile
 		if (touching) circleRadius = 65;
 		else circleRadius = 50;
 		
@@ -121,10 +121,12 @@ function onTouchMove(e) {
     touchY = touch.clientY;
 	var dist = Math.sqrt(Math.pow(baseY-touchY, 2) + Math.pow(baseX-touchX, 2));
 	if (touching) {
-		if (dist < stickRadius || dist < -stickRadius) { // in the circle
+		// Inside the max radius
+		if (dist < stickRadius || dist < -stickRadius) {
 			circY=touchY;
 			circX=touchX;
-		} else { // outside the circle
+		// Outside the max radius
+		} else {
 			// SOHCAHTOA TIME BITCHES
 			var angle = Math.atan((touchY-baseY)/(touchX-baseX));
 			var opposite = stickRadius * Math.sin(angle);
@@ -137,6 +139,7 @@ function onTouchMove(e) {
 				circX=baseX-adjacent;
 				circY=baseY-opposite;
 			}
+			// Triangles, how do they work?
 		}
 	}
 }//onTouchMove
