@@ -53,7 +53,7 @@ function resetCanvas (e) {
 }
 
 function init(){
-
+	//PETER WUZ HERE
 }//init
 
 function draw(){
