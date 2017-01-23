@@ -1,19 +1,36 @@
-var canvas; 	// <canvas> 
-var c;			// Canvas rendering context
-var container;	// <div>
+var canvas; 			// <canvas> HTML tag
+var c;					// Canvas rendering context
+var container;			// <div> HTML tag
 var mouseX, mouseY;
 var mouseDown = false;
-var circX, circY; //where the circle will be drawn for the analog stick
-var baseX, baseY; //where the base of the analog stick will be drawn
+var circX, circY; 		// Where the circle will be drawn for the analog stick
+var baseX, baseY; 		// Where the base of the analog stick will be drawn
 var touchable = 'createTouch' in document;
 var touch;
 var touching = false;
 var halfX = (window.innerWidth/2);
-var rad = 80;
+var stickRadius = 80;	// The max distance of the stick from the base
+var circleRadius = 65;	// The radius of the stick circles
 
+// Initial the canvas
 setupCanvas();
 
-setInterval(draw, 1000/35);
+// Set up event listeners depending on platform
+if(touchable) {
+	canvas.addEventListener( 'touchstart', onTouchStart, false );
+	canvas.addEventListener( 'touchmove', onTouchMove, false );
+	canvas.addEventListener( 'touchend', onTouchEnd, false );
+	window.onorientationchange = resetCanvas;
+
+} else {
+	canvas.addEventListener( 'mousemove', onMouseMove, false );
+    canvas.addEventListener('mousedown', onMouseDown, false);
+    canvas.addEventListener('mouseup', onMouseUp, false);
+}// if...else
+window.onresize = resetCanvas;
+
+// Call the draw method every 20 milliseconds
+setInterval(draw, 20);
 
 function setupCanvas() {
 	// Create a <canvas> HTML tag
@@ -23,8 +40,8 @@ function setupCanvas() {
 	
 	// Get a CanvasRenderingContext2D on the canvas
 	c = canvas.getContext( '2d' );
-	c.strokeStyle = "#ffffff";
-	c.lineWidth = 2;
+	//c.strokeStyle = "#ffffff";
+	//c.lineWidth = 2;
 	
 	// Create a <div> HTML tag called container
 	container = document.createElement( 'div' );
@@ -36,101 +53,58 @@ function setupCanvas() {
 	document.body.appendChild( container );
 }//setupCanvas
 
-if(touchable) {
-	canvas.addEventListener( 'touchstart', onTouchStart, false );
-	canvas.addEventListener( 'touchmove', onTouchMove, false );
-	canvas.addEventListener( 'touchend', onTouchEnd, false );
-	window.onorientationchange = resetCanvas;
-	window.onresize = resetCanvas;
-
-} else {
-	canvas.addEventListener( 'mousemove', onMouseMove, false );
-    canvas.addEventListener('mousedown', onMouseDown, false);
-    canvas.addEventListener('mouseup', onMouseUp, false);
-    window.onresize = resetCanvas;
-}// if...else
-
 function resetCanvas (e) {
- 	// resize the canvas - but remember - this clears the canvas too.
+ 	// Resize the canvas - but remember - this clears the canvas too
   	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
-	//make sure we scroll to the top left.
+	
+	// Scroll to the top left.
 	window.scrollTo(0,0);
 }
 
-function init(){
+function init() {
 	//PETER WUZ HERE
 }//init
 
-function draw(){
+function draw() {
+	// Erase the entire canvas
     c.clearRect(0, 0, canvas.width, canvas.height);
-    if(touching && touch.clientX<halfX){
+	
+	// If touching the left half of the window
+    if ((touching && touch.clientX < halfX) || (mouseDown && baseX < halfX)) {
+		// Get the digital coordinates
         var digDirection = getDigDirection();
         var digx = digDirection.xdig;
         var digy = digDirection.ydig;
-
+		// Get the analogue coordinates
         var anlDirection = getDirection();
         var anlx = anlDirection.xdir;
         var anly = anlDirection.ydir;
+		
+		// Display the digital and analogue coords
+        c.fillText('digx: '+digx, 10, 20);
+        c.fillText('digy: '+digy, 10, 40);
+        c.fillText('anlx: '+anlx, 10, 60);
+        c.fillText('anly: '+anly, 10, 80);
 
-            c.beginPath();
-            c.strokeStyle = "rgba(255, 0, 0, 0.5)";//red base
-            c.lineWidth = "10";
-            c.arc(baseX, baseY, 65, 0, Math.PI*2, true);
-            c.stroke();
+		// Set the circle radius
+		// TODO: make this always 65 when it's only used on mobile
+		if (touching) circleRadius = 65;
+		else circleRadius = 50;
+		
+		// Draw the red circle (base)
+        c.beginPath();
+		c.lineWidth = "10";
+        c.strokeStyle = "rgba(255, 0, 0, 0.5)";
+        c.arc(baseX, baseY, circleRadius, 0, Math.PI*2, true);
+        c.stroke();
 
-			c.beginPath();
-			c.strokeStyle = "rgba(0, 255, 0, 0.5)";//green stick
-			c.lineWidth = "10";
-			c.arc(circX, circY, 65, 0, Math.PI*2, true);
-			c.stroke();
-
-            c.font = '50px';
-            c.fillText('digx: '+digx, 10, 20);
-
-            c.font = '50px';
-            c.fillText('digy: '+digy, 10, 40);
-
-            c.font = '30px';
-            c.fillText('anlx: '+anlx, 10, 60);
-
-            c.font = '30px';
-            c.fillText('anly: '+anly, 10, 80);
-    } else{
-        if(mouseDown && baseX<halfX){
-            var anlDirection = getDirection();
-            var anlx = anlDirection.xdir;
-            var anly = anlDirection.ydir;
-
-            var digDirection = getDigDirection();
-            var digx = digDirection.xdig;
-            var digy = digDirection.ydig;
-
-            c.beginPath();
-            c.strokeStyle = "rgba(255, 0, 0, 0.5)";
-            c.lineWidth = "10";
-            c.arc(baseX, baseY, 50, 0, Math.PI*2, true);
-            c.stroke();
-
-            c.beginPath();
-            c.strokeStyle = "rgba(0, 255, 0, 0.5)";
-            c.lineWidth = "10";
-            c.arc(circX, circY, 50, 0, Math.PI*2, true);
-            c.stroke();
-
-            c.font = '30px';
-            c.fillText('digx: '+digx, 10, 20);
-
-            c.font = '30px';
-            c.fillText('digy: '+digy, 10, 40);
-
-            c.font = '30px';
-            c.fillText('anlx: '+anlx, 10, 60);
-
-            c.font = '30px';
-            c.fillText('anly: '+anly, 10, 80);
-        }//if
-    }//if else
+		// Draw the green circle (stick)
+		c.beginPath();
+		c.strokeStyle = "rgba(0, 255, 0, 0.5)";
+		c.arc(circX, circY, circleRadius, 0, Math.PI*2, true);
+		c.stroke();
+    }//if
 }//draw
 
 function onTouchStart(e) {
@@ -147,14 +121,14 @@ function onTouchMove(e) {
     touchY = touch.clientY;
 	var dist = Math.sqrt(Math.pow(baseY-touchY, 2) + Math.pow(baseX-touchX, 2));
 	if (touching) {
-		if (dist < rad || dist < -rad) { // in the circle
+		if (dist < stickRadius || dist < -stickRadius) { // in the circle
 			circY=touchY;
 			circX=touchX;
 		} else { // outside the circle
 			// SOHCAHTOA TIME BITCHES
 			var angle = Math.atan((touchY-baseY)/(touchX-baseX));
-			var opposite = rad * Math.sin(angle);
-			var adjacent = rad * Math.cos(angle);
+			var opposite = stickRadius * Math.sin(angle);
+			var adjacent = stickRadius * Math.cos(angle);
 
 			if (touchX > baseX) {
 				circX=baseX+adjacent;
@@ -177,14 +151,14 @@ function onMouseMove(event) {
 
 	var dist = Math.sqrt(Math.pow(baseY-mouseY, 2) + Math.pow(baseX-mouseX, 2));
 	if (mouseDown) {
-		if (dist < rad || dist < -rad) { // in the circle
+		if (dist < stickRadius || dist < -stickRadius) { // in the circle
 			circY=mouseY;
 			circX=mouseX;
 		} else { // outside the circle
 			// SOHCAHTOA TIME BITCHES
 			var angle = Math.atan((mouseY-baseY)/(mouseX-baseX));
-			var opposite = rad * Math.sin(angle);
-			var adjacent = rad * Math.cos(angle);
+			var opposite = stickRadius * Math.sin(angle);
+			var adjacent = stickRadius * Math.cos(angle);
 
 			if (mouseX >= baseX) {
 				circX=baseX+adjacent;
@@ -218,8 +192,8 @@ function getDirection(){
     var sin = (y/Math.sqrt((x*x)+(y*y)));
     var cos = -1*(x/Math.sqrt((x*x)+(y*y)));
 
-    var xdir = (Math.abs(x)/rad)*cos;
-    var ydir = (Math.abs(y)/rad)*sin;
+    var xdir = (Math.abs(x)/stickRadius)*cos;
+    var ydir = (Math.abs(y)/stickRadius)*sin;
 
     var analogDir = {'xdir': xdir, 'ydir': ydir};
     return analogDir;
@@ -234,8 +208,8 @@ function getDigDirection(){
     var sin = (y/Math.sqrt((x*x)+(y*y)));
     var cos = -1*(x/Math.sqrt((x*x)+(y*y)));
 
-    var xdir = (Math.abs(x)/rad)*cos;
-    var ydir = (Math.abs(y)/rad)*sin;
+    var xdir = (Math.abs(x)/stickRadius)*cos;
+    var ydir = (Math.abs(y)/stickRadius)*sin;
 
     var xdig = 0;
     var ydig = 0;
